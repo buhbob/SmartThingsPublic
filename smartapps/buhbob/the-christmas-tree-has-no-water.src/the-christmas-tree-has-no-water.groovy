@@ -27,11 +27,13 @@ input "switches", "capability.switch", title: "Which?", required: false, multipl
 
 def installed() {
 subscribe(alarm, "water.dry", waterWetHandler)
+subscribe(switches, "switch.on", waterWetHandler)
 }
 
 def updated() {
 unsubscribe()
 subscribe(alarm, "water.dry", waterWetHandler)
+subscribe(switches, "switch.on", switchWaterCheck)
 }
 
 def waterWetHandler(evt) {
@@ -54,4 +56,18 @@ if (alreadySentSms) {
 		sendSms(phone, msg)
 	}
 }
+}
+
+def switchWaterCheck(evt) {
+	def waterState = alarm.currentValue("water")
+    log.debug "$waterState"
+	if("$waterState" == "wet")
+    {
+    	log.debug "Water detected: $alarm. No action."
+    }   
+    else
+    {
+    	switches.off()
+        log.debug "No water detected: $alarm. Turning off $switches."
+    }
 }
