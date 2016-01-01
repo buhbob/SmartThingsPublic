@@ -1,7 +1,7 @@
 /**
 * No Water
 *
-* Author: Alex
+* Author: Bob
 */
 definition(
     name: "The Christmas Tree Has no Water",
